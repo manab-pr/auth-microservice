@@ -56,12 +56,12 @@ class LoginUseCase:
         if not user.is_active:
             raise ValueError("User account is deactivated")
 
-        # Generate tokens
+        # Generate tokens with user permissions
         access_token = self.token_generator.generate_access_token(
-            user_id=user.id, email=user.email
+            user_id=user.id, email=user.email, permissions=user.permissions
         )
         refresh_token = self.token_generator.generate_refresh_token(
-            user_id=user.id, email=user.email
+            user_id=user.id, email=user.email, permissions=user.permissions
         )
 
         return LoginResult(

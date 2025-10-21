@@ -63,12 +63,12 @@ class RefreshTokenUseCase:
         expiry_seconds = self.token_generator.get_token_expiry_seconds(is_refresh=True)
         await self.revocation_store.revoke_token(token_data.jti, expiry_seconds)
 
-        # Generate new tokens
+        # Generate new tokens with user permissions
         new_access_token = self.token_generator.generate_access_token(
-            user_id=user.id, email=user.email
+            user_id=user.id, email=user.email, permissions=user.permissions
         )
         new_refresh_token = self.token_generator.generate_refresh_token(
-            user_id=user.id, email=user.email
+            user_id=user.id, email=user.email, permissions=user.permissions
         )
 
         return RefreshTokenResult(

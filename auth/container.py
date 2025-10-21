@@ -3,6 +3,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 import redis.asyncio as redis
 
 from auth.domain.ports import UserRepository, RevocationStore
+from auth.domain.ports.permission_repository import PermissionRepository
+from auth.domain.ports.role_repository import RoleRepository
 from auth.domain.services import PasswordHasher, TokenGenerator
 from auth.domain.usecases import (
     RegisterUserUseCase,
@@ -12,7 +14,12 @@ from auth.domain.usecases import (
     UpdateUserProfileUseCase,
     RefreshTokenUseCase,
 )
+from auth.domain.usecases.assign_role import AssignRoleUseCase
+from auth.domain.usecases.list_roles import ListRolesUseCase
+from auth.domain.usecases.list_permissions import ListPermissionsUseCase
 from auth.infra.mongodb import MongoUserRepository
+from auth.infra.mongodb.permission_repository import MongoPermissionRepository
+from auth.infra.mongodb.role_repository import MongoRoleRepository
 from auth.infra.redis import RedisRevocationStore
 from auth.infra.security import BcryptPasswordHasher, JWTTokenGenerator
 
@@ -41,6 +48,8 @@ class Container:
         self._token_generator = None
         self._user_repository = None
         self._revocation_store = None
+        self._permission_repository = None
+        self._role_repository = None
 
     # Infrastructure layer
     def user_repository(self) -> UserRepository:
@@ -71,6 +80,20 @@ class Container:
                 refresh_token_expire_days=self._refresh_token_expire_days,
             )
         return self._token_generator
+
+    def permission_repository(self) -> PermissionRepository:
+        """Get permission repository instance."""
+        if self._permission_repository is None:
+            self._permission_repository = MongoPermissionRepository(
+                self._mongodb_database
+            )
+        return self._permission_repository
+
+    def role_repository(self) -> RoleRepository:
+        """Get role repository instance."""
+        if self._role_repository is None:
+            self._role_repository = MongoRoleRepository(self._mongodb_database)
+        return self._role_repository
 
     # Use cases
     def register_use_case(self) -> RegisterUserUseCase:
@@ -113,4 +136,24 @@ class Container:
             user_repository=self.user_repository(),
             token_generator=self.token_generator(),
             revocation_store=self.revocation_store(),
+        )
+
+    def assign_role_use_case(self) -> AssignRoleUseCase:
+        """Get assign role use case."""
+        return AssignRoleUseCase(
+            user_repository=self.user_repository(),
+            role_repository=self.role_repository(),
+            permission_repository=self.permission_repository(),
+        )
+
+    def list_roles_use_case(self) -> ListRolesUseCase:
+        """Get list roles use case."""
+        return ListRolesUseCase(
+            role_repository=self.role_repository(),
+        )
+
+    def list_permissions_use_case(self) -> ListPermissionsUseCase:
+        """Get list permissions use case."""
+        return ListPermissionsUseCase(
+            permission_repository=self.permission_repository(),
         )
