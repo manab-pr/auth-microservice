@@ -1,0 +1,44 @@
+[
+  {
+    "name": "user",
+    "description": "Regular user with basic permissions",
+    "is_system": true,
+    "permissions": [
+      "auth:login",
+      "auth:logout",
+      "auth:refresh",
+      "auth:profile:read",
+      "auth:profile:update",
+      "users:read"
+    ]
+  },
+  {
+    "name": "admin",
+    "description": "Administrator with user and role management permissions",
+    "is_system": true,
+    "permissions": [
+      "auth:login",
+      "auth:logout",
+      "auth:refresh",
+      "auth:profile:read",
+      "auth:profile:update",
+      "users:create",
+      "users:read",
+      "users:update",
+      "users:delete",
+      "users:list",
+      "roles:read",
+      "roles:list",
+      "permissions:read",
+      "permissions:list"
+    ]
+  },
+  {
+    "name": "super_admin",
+    "description": "Super administrator with all system permissions",
+    "is_system": true,
+    "permissions": [
+      "admin:all"
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 """User domain entity."""
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from dataclasses import dataclass, field
 
 
@@ -13,6 +13,8 @@ class User:
     full_name: str = ""
     is_active: bool = True
     is_verified: bool = False
+    role_id: Optional[str] = None  # Reference to Role
+    permissions: List[str] = field(default_factory=list)  # List of permission names
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: datetime = field(default_factory=datetime.utcnow)
 
@@ -46,3 +48,25 @@ class User:
         if full_name is not None:
             self.full_name = full_name
         self.updated_at = datetime.utcnow()
+
+    def assign_role(self, role_id: str) -> None:
+        """Assign a role to the user."""
+        self.role_id = role_id
+        self.updated_at = datetime.utcnow()
+
+    def set_permissions(self, permissions: List[str]) -> None:
+        """Set user permissions (typically loaded from role)."""
+        self.permissions = permissions
+        self.updated_at = datetime.utcnow()
+
+    def has_permission(self, permission: str) -> bool:
+        """Check if user has a specific permission."""
+        return permission in self.permissions
+
+    def has_any_permission(self, permissions: List[str]) -> bool:
+        """Check if user has any of the specified permissions."""
+        return any(p in self.permissions for p in permissions)
+
+    def has_all_permissions(self, permissions: List[str]) -> bool:
+        """Check if user has all of the specified permissions."""
+        return all(p in self.permissions for p in permissions)

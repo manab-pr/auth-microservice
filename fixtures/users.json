@@ -1,0 +1,26 @@
+[
+  {
+    "email": "user@example.com",
+    "password": "userpass123",
+    "full_name": "Regular User",
+    "is_active": true,
+    "is_verified": true,
+    "role": "user"
+  },
+  {
+    "email": "admin@example.com",
+    "password": "adminpass123",
+    "full_name": "Admin User",
+    "is_active": true,
+    "is_verified": true,
+    "role": "admin"
+  },
+  {
+    "email": "superadmin@example.com",
+    "password": "superadminpass123",
+    "full_name": "Super Admin User",
+    "is_active": true,
+    "is_verified": true,
+    "role": "super_admin"
+  }
+]

@@ -1,7 +1,7 @@
 """Token generator service interface."""
 from abc import ABC, abstractmethod
-from typing import Dict, Any
-from dataclasses import dataclass
+from typing import Dict, Any, List
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -11,19 +11,23 @@ class TokenData:
     user_id: str
     email: str
     jti: str  # JWT ID for revocation
+    permissions: List[str] = field(default_factory=list)  # User permissions
 
 
 class TokenGenerator(ABC):
     """Service interface for JWT token generation and validation."""
 
     @abstractmethod
-    def generate_access_token(self, user_id: str, email: str) -> str:
+    def generate_access_token(
+        self, user_id: str, email: str, permissions: List[str] = None
+    ) -> str:
         """
         Generate an access token for a user.
 
         Args:
             user_id: The user's ID
             email: The user's email
+            permissions: List of user permissions
 
         Returns:
             The encoded JWT access token
@@ -31,13 +35,16 @@ class TokenGenerator(ABC):
         pass
 
     @abstractmethod
-    def generate_refresh_token(self, user_id: str, email: str) -> str:
+    def generate_refresh_token(
+        self, user_id: str, email: str, permissions: List[str] = None
+    ) -> str:
         """
         Generate a refresh token for a user.
 
         Args:
             user_id: The user's ID
             email: The user's email
+            permissions: List of user permissions
 
         Returns:
             The encoded JWT refresh token

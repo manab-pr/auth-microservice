@@ -21,6 +21,8 @@ class MongoUserRepository(UserRepository):
             "full_name": user.full_name,
             "is_active": user.is_active,
             "is_verified": user.is_verified,
+            "role_id": user.role_id,
+            "permissions": user.permissions,
             "created_at": user.created_at,
             "updated_at": user.updated_at,
         }
@@ -60,6 +62,8 @@ class MongoUserRepository(UserRepository):
             "full_name": user.full_name,
             "is_active": user.is_active,
             "is_verified": user.is_verified,
+            "role_id": user.role_id,
+            "permissions": user.permissions,
             "updated_at": user.updated_at,
         }
 
@@ -90,6 +94,8 @@ class MongoUserRepository(UserRepository):
             full_name=doc.get("full_name", ""),
             is_active=doc.get("is_active", True),
             is_verified=doc.get("is_verified", False),
+            role_id=doc.get("role_id"),
+            permissions=doc.get("permissions", []),
             created_at=doc.get("created_at", datetime.utcnow()),
             updated_at=doc.get("updated_at", datetime.utcnow()),
         )
