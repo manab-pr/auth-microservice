@@ -120,6 +120,21 @@ The API will be available at:
 - **Interactive docs (Swagger UI)**: http://localhost:8000/docs
 - **Alternative docs (ReDoc)**: http://localhost:8000/redoc
 
+## Monitoring with Prometheus & Grafana
+
+The project ships with a Docker Compose stack that brings up the API together with Prometheus and Grafana for metrics and dashboards.
+
+```bash
+# Build and start the full stack
+docker compose up --build
+```
+
+- Prometheus scrapes the FastAPI metrics endpoint exposed at `http://app:8000/metrics`.
+- Grafana is available at [http://localhost:3000](http://localhost:3000) (defaults to `admin` / `admin` unless you change `GRAFANA_ADMIN_USER` or `GRAFANA_ADMIN_PASSWORD` in `.env`).
+- A starter dashboard (`FastAPI Overview`) is provisioned automatically. It visualizes request rate, latency (p95), in-flight requests, and 5xx responses using the default metrics emitted by `prometheus-fastapi-instrumentator`.
+
+Metrics are also accessible directly at [http://localhost:8000/metrics](http://localhost:8000/metrics) when running the app locally without Docker.
+
 ## API Endpoints
 
 ### Health Check

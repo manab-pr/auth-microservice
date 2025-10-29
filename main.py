@@ -9,6 +9,9 @@ from auth.container import Container
 from auth.presentation.http.handlers import auth_router
 from auth.presentation.http import dependencies
 from logging_config import setup_logging, get_logger
+from prometheus_fastapi_instrumentator import Instrumentator
+
+
 
 # Setup logging
 setup_logging(log_level="DEBUG" if settings.debug else "INFO")
@@ -87,6 +90,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+Instrumentator().instrument(app).expose(app)
 
 # Include routers
 app.include_router(auth_router)
